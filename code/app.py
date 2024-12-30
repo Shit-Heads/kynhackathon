@@ -15,6 +15,17 @@ mysql = MySQL(app)
 
 @app.route('/')
 def index():
+    username = request.cookies.get('username')
+    password = request.cookies.get('password')
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM users WHERE email = %s', (username, ))
+    account = cursor.fetchone()
+    if account:
+        if account['password'] == password:
+            session['loggedin'] = True
+            session['username'] = username
+            resume = make_response(redirect(url_for('dashboard')))
+            return resume
     return render_template('login.html')
 
 @app.route('/about')
@@ -49,6 +60,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
+        remember_me = request.form.get('checkbox')
 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
@@ -56,6 +68,14 @@ def login():
 
         if account:
             if account['password'] == password:
+                session['loggedin'] = True
+                session['username'] = email
+                if remember_me:
+                    res = make_response(redirect(url_for('dashboard')))
+                    res.set_cookie('username', f'{email}', max_age=60*60*24*7)
+                    res.set_cookie('password', f'{password}', max_age=60*60*24*7)
+                    flash('Login successful!', 'success')
+                    return res
                 flash('Login successful!', 'success')
                 return redirect(url_for('dashboard'))
             else:
@@ -66,9 +86,21 @@ def login():
 
     return render_template('login.html')
 
+@app.route('/logout')
+def logout():
+    session.pop('loggedin', None)
+    session.pop('username', None)
+    res = make_response(redirect('/'))
+    res.delete_cookie('username')
+    res.delete_cookie('password')
+    return res
+
 @app.route('/index')
 def dashboard():
-    return render_template('index.html')
+    if 'loggedin' in session:
+        username = session['username'] # if users name is needed use this variable
+        return render_template('index.html')
+    return redirect(url_for("login"))
 
 if __name__ == '__main__':
     app.run(debug=True)
