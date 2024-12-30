@@ -1,5 +1,6 @@
 .navbar {
     background-color: #202b3a;
+    
   }
 
   .navbar-brand img {
@@ -41,9 +42,27 @@
   .header .location {
     color: white;
   }
-
-
-
-  body {
-    background-color: #f8f9fa;
+  .card{
+    margin:40px;
   }
+  .nav-link{
+    color:black;
+  }
+  .nav-link_w{
+    color:white;
+    text-decoration: none;
+  }
+  .nav-item_w{
+    text-align: center;
+    margin:10px;
+    font-weight: 700;
+    font-size: 20px;
+  }
+  .card-sidebar{
+    margin-top:10px;
+    color:rgb(3, 3, 3);
+  }
+  body {
+    background-color: white;
+  }
+  
