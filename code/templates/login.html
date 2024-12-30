@@ -31,15 +31,17 @@
         </nav>
 
         <!-- Flash messages for success or error -->
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="alert alert-warning" role="alert">
-                    {% for message in messages %}
-                        {{ message }}
-                    {% endfor %}
-                </div>
-            {% endif %}
-        {% endwith %}
+         <div>
+             {% with messages = get_flashed_messages() %}
+                 {% if messages %}
+                     <div class="alert alert-warning" role="alert">
+                         {% for message in messages %}
+                             {{ message }}
+                         {% endfor %}
+                     </div>
+                 {% endif %}
+             {% endwith %}
+         </div>
 
         <!----------------------------- Form box ----------------------------------->    
         <div class="form-box">
