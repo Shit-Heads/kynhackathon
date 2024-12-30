@@ -58,6 +58,11 @@
     font-weight: 700;
     font-size: 20px;
   }
-  body {
-    background-color: #f8f9fa;
+  .card-sidebar{
+    margin-top:10px;
+    color:rgb(3, 3, 3);
   }
+  body {
+    background-color: white;
+  }
+  
