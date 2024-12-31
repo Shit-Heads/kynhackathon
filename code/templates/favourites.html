@@ -13,14 +13,66 @@
     <div class="container mt-4">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Add your favourite topics</h5>
+                <h5 class="card-title" style="text-align: center; margin-bottom: 40px; font-weight: 500;">Add your favourite topics</h5>
                 <form method="POST" action="{{ url_for('favourites') }}">
-                    <div class="mb-3">
-                        <label for="topics" class="form-label">Favourite Topics</label>
-                        <input type="text" class="form-control" id="topics" name="topics" placeholder="Enter topics separated by commas">
+                    <div class="form-check">
+                      <div class="container text-center">
+                        <div class="row">
+                          <div class="col">
+                            <input class="form-check-input" type="checkbox" name="topics" value="Sports" id="flexCheckSports">
+                            <label class="form-check-label" for="flexCheckSports">
+                             Sports
+                            </label>
+                          </div>
+                          <div class="col">
+                            <input class="form-check-input" type="checkbox" name="topics" value="Economics" id="flexCheckEconomics">
+                            <label class="form-check-label" for="flexCheckEconomics">
+                             Economics
+                            </label>
+                          </div>
+                          <div class="col">
+                            <input class="form-check-input" type="checkbox" name="topics" value="Community" id="flexCheckCommunity">
+                            <label class="form-check-label" for="flexCheckCommunity">
+                             Community
+                            </label>
+                          </div>
+                          <div class="col">
+                            <input class="form-check-input" type="checkbox" name="topics" value="Health" id="flexCheckHealth">
+                            <label class="form-check-label" for="flexCheckHealth">
+                             Health
+                            </label>
+                          </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                              <input class="form-check-input" type="checkbox" name="topics" value="Sports" id="flexCheckSports">
+                              <label class="form-check-label" for="flexCheckSports">
+                               Food  
+                              </label>
+                            </div>
+                            <div class="col">
+                              <input class="form-check-input" type="checkbox" name="topics" value="Economics" id="flexCheckEconomics">
+                              <label class="form-check-label" for="flexCheckEconomics">
+                                Technology
+                              </label>
+                            </div>
+                            <div class="col">
+                              <input class="form-check-input" type="checkbox" name="topics" value="Community" id="flexCheckCommunity">
+                              <label class="form-check-label" for="flexCheckCommunity">
+                               Discounts
+                              </label>
+                            </div>
+                            <div class="col">
+                              <input class="form-check-input" type="checkbox" name="topics" value="Health" id="flexCheckHealth">
+                              <label class="form-check-label" for="flexCheckHealth">
+                                 Fashion
+                              </label>
+                            </div>
+                          </div>
+                      </div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Skip</a>
+                    <button type="submit" class="btn btn-primary" style="margin-left:200px; margin-top:20px;" >Save</button>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-secondary" style="margin-top:20px;">Skip</a>
                 </form>
             </div>
         </div>
