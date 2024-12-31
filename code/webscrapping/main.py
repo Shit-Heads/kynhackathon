@@ -1,4 +1,12 @@
 from playwright.sync_api import sync_playwright
+import requests
+
+def get_redirect_url(url):
+    try:
+        response = requests.head(url, allow_redirects=True)
+        return response.url
+    except:
+        return url
 
 def scrape_google_news(location, category):
     search_query = f"{location} {category}"
@@ -29,10 +37,14 @@ def scrape_google_news(location, category):
             url = link_element.get_attribute('href') if link_element else 'N/A'
             date = date_element.get_attribute('datetime') if date_element else 'N/A'
 
+            if image:
+                full_url = f"https://news.google.com{image}"
+                image_link = get_redirect_url(full_url)
+
             news_data.append({
                 'headline': headline,
                 'source': source,
-                'image': image,
+                'image': image_link,
                 'url': url,
                 'date': date
             })
@@ -43,7 +55,7 @@ def scrape_google_news(location, category):
 if __name__ == '__main__':
     #location = #input("Enter Location: ")
     #category = #input("Enter Category: ")
-    news = scrape_google_news("chennai", "f1")
+    news = scrape_google_news("mumbai", "f1")
     for i in news: print(i)
     # for idx, article in enumerate(news):
     #     print(f"Article {idx + 1}:")
