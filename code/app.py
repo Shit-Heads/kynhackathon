@@ -158,7 +158,7 @@ def dashboard():
                 post['image_url'] = None
             posts_with_images.append(post)
 
-        return render_template('index.html', firstname=firstname, location=location, favourites=fav)  # , news=news, communitypost=posts_with_images)
+        return render_template('index.html', firstname=firstname, location=location, favourites=fav , news=news, communitypost=posts_with_images)
     return redirect(url_for("login"))
 
 @app.route('/post', methods=['GET', 'POST'])
