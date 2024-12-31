@@ -26,11 +26,15 @@ def index():
             session['username'] = username
             resume = make_response(redirect(url_for('dashboard')))
             return resume
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/picfav')
+def pickfav():
+    return render_template('picfav.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -99,7 +103,7 @@ def logout():
 def dashboard():
     if 'loggedin' in session:
         username = session['username'] # if users name is needed use this variable
-        return render_template('index.html')
+        return render_template('picfav.html')
     return redirect(url_for("login"))
 
 if __name__ == '__main__':

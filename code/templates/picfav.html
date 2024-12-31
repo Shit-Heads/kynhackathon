@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Circular Toggle Buttons</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>   
+        .circle-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+        }
+
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .toggle-item {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform-origin: 0 0;
+        }
+        
+        .btn-toggle {
+            padding: 0.5rem 1rem;
+            min-width: 100px;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .btn-toggle.active {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .center-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+                /* Add this CSS to your stylesheet */
+        .bottom-button-container {
+            position: fixed;
+            bottom: 1pc;
+            width: 100%;
+            text-align: center;
+        }
+
+        #bottomButton {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #bottomButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="circle-container container" id="toggleContainer">
+        </div>
+    </div>
+
+    <div class="bottom-button-container">
+        <button class="btn" id="bottomButton" onclick="bottomButtonClick()">Proceed</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('toggleContainer');
+        const numToggles = 8;
+        const radius = 150; // Increased radius to accommodate larger buttons
+        const buttonTexts = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 
+                           'Option 5', 'Option 6', 'Option 7', 'Option 8'];
+
+        for (let i = 0; i < numToggles; i++) {
+            const angle = (i / numToggles) * 2 * Math.PI;
+            const x = Math.cos(angle) * radius;
+            const y = Math.sin(angle) * radius;
+
+            const toggleDiv = document.createElement('div');
+            toggleDiv.className = 'toggle-item';
+            toggleDiv.style.transform = `translate(${x}px, ${y}px)`;
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'btn btn-outline-primary btn-toggle';
+            button.textContent = buttonTexts[i];
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+
+            toggleDiv.appendChild(button);
+            container.appendChild(toggleDiv);
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
