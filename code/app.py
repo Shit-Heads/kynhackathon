@@ -109,6 +109,18 @@ def logout():
     res.delete_cookie('password')
     return res
 
+@app.route('/favourites', methods=['GET', 'POST'])
+def favourites():
+    if request.method == 'POST':
+        topics = request.form.getlist('topics')
+        username = session['username']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        for topic in topics:
+            cursor.execute('INSERT INTO favourites (username, topic) VALUES (%s, %s)', (username, topic.strip()))
+        mysql.connection.commit()
+        return redirect(url_for('dashboard'))
+    return render_template('favourites.html')
+
 @app.route('/index')
 def dashboard():
     if 'loggedin' in session:
