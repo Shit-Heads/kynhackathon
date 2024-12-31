@@ -2,7 +2,9 @@ from flask import *
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
-from webscrapping.main import *
+import os
+import secrets
+#from webscrapping.main import *
 import pymongo
 from bson.objectid import ObjectId
 
@@ -16,10 +18,17 @@ collection = db["communitynews"]
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_PASSWORD'] = 'Anjana@2005'
 app.config['MYSQL_DB'] = 'kyn'
 
 mysql = MySQL(app)
+def generate_csrf_token():
+    if 'csrf_token' not in session:
+        session['csrf_token'] = secrets.token_hex(16)
+    return session['csrf_token']
+
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
+
 
 @app.route('/')
 def index():
@@ -65,7 +74,7 @@ def register():
             flash('Registration successful!', 'success')
             session['loggedin'] = True
             session['username'] = email
-            return redirect(url_for('picfav'))
+            return redirect(url_for('favourites'))
 
     return render_template('login.html')
 
@@ -124,15 +133,15 @@ def favourites():
 @app.route('/index')
 def dashboard():
     if 'loggedin' in session:
-        username = session['username'] # if users name is needed use this variable
+        username = session['username']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute(f"select * from users where email = '{username}'")
+        cursor.execute(f"SELECT firstname, location FROM users WHERE email = '{username}'")
         account = cursor.fetchone()
+        firstname = account['firstname']
         location = account['location']
-        category = 'f1'
-        news = scrape_google_news(location, category)
-        communitypost = collection.find().sort("_id", pymongo.DESCENDING)
-        return render_template('index.html', news=news, communitypost=communitypost)
+        # news = scrape_google_news(location, category)
+        # communitypost = collection.find().sort("_id", pymongo.DESCENDING)
+        return render_template('index.html', firstname=firstname, location=location)  # , news=news, communitypost=communitypost)
     return redirect(url_for("login"))
 
 @app.route('/post', methods=['GET', 'POST'])
@@ -157,6 +166,20 @@ def viewpost(post_id):
 # @app.teardown_appcontext
 # def close_mongo_client(exception):
 #     client.close()
+
+@app.route('/update_location', methods=['POST'])
+def update_location():
+    if 'loggedin' in session:
+        if request.json['csrf_token'] != session['csrf_token']:
+            return jsonify(success=False, message="Invalid CSRF token")
+        
+        username = session['username']
+        new_location = request.json['location']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('UPDATE users SET location = %s WHERE email = %s', (new_location, username))
+        mysql.connection.commit()
+        return jsonify(success=True)
+    return jsonify(success=False)
 
 if __name__ == '__main__':
     app.run(debug=True)
