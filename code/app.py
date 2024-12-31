@@ -6,10 +6,10 @@ import re
 app = Flask(__name__)
 app.secret_key = 'gowtham'  
 
-app.config['MYSQL_HOST'] = 'localhost'  
+app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'bingus'  
-app.config['MYSQL_DB'] = 'kyn' 
+app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_DB'] = 'kyn'
 
 mysql = MySQL(app)
 
