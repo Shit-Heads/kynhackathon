@@ -8,7 +8,7 @@
     font-family: 'Poppins', sans-serif;
 }
 body{
-    background-image: url("assets/images/bg.jpeg");
+    background: url("bg.jpg");
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -128,7 +128,7 @@ header{
 }
 .input-field{
     font-size: 15px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.3);
     color: #fff;
     height: 50px;
     width: 100%;
