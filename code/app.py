@@ -8,7 +8,7 @@ app.secret_key = 'gowtham'
 
 app.config['MYSQL_HOST'] = 'localhost'  
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'bingus'  
+app.config['MYSQL_PASSWORD'] = 'Anjana@2005'  
 app.config['MYSQL_DB'] = 'kyn' 
 
 mysql = MySQL(app)
@@ -50,10 +50,23 @@ def register():
         else:
             cursor.execute('INSERT INTO users (firstname, lastname, email, password, location) VALUES (%s, %s, %s, %s, %s)', (firstname, lastname, email, password, location))
             mysql.connection.commit()
+            session['loggedin'] = True
+            session['username'] = email
             flash('Registration successful!', 'success')
-            return redirect(url_for('login'))
+            return redirect(url_for('favourites'))
 
     return render_template('login.html')
+
+@app.route('/index')
+def dashboard():
+    if 'loggedin' in session:
+        username = session['username']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute('SELECT topic FROM favourites WHERE username = %s', (username,))
+        favourites = cursor.fetchall()
+        return render_template('index.html', favourites=favourites)
+    return redirect(url_for("login"))
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -95,12 +108,20 @@ def logout():
     res.delete_cookie('password')
     return res
 
-@app.route('/index')
-def dashboard():
-    if 'loggedin' in session:
-        username = session['username'] # if users name is needed use this variable
-        return render_template('index.html')
-    return redirect(url_for("login"))
+@app.route('/favourites', methods=['GET', 'POST'])
+def favourites():
+    if request.method == 'POST':
+        topics = request.form['topics'].split(',')
+        username = session['username']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        for topic in topics:
+            cursor.execute('INSERT INTO favourites (username, topic) VALUES (%s, %s)', (username, topic.strip()))
+        mysql.connection.commit()
+        return redirect(url_for('dashboard'))
+    return render_template('favourites.html')
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

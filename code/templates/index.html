@@ -12,7 +12,6 @@
     <!-- Navbar -->
     <nav class="navbar navbar-dark">
       <div class="container-fluid">
-
         <a class="navbar-brand" href="#">
           NA
         </a>
@@ -38,10 +37,6 @@
           <li class="nav-item_w">
             <a class="nav-link_w" href="#">Pricing</a>
           </li>
-          <li class="nav-item_w">
-            <a class="nav-link_w" href="{{ url_for('logout') }}">Logout</a>
-          </li>
-          
         </ul>
       </div>
       </div>
@@ -49,7 +44,6 @@
 
     <!-- Content -->
     <div class="card">
-
       <!-- Tabs -->
       <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -131,61 +125,19 @@
             </div>
           </div>
           
-  
           <!-- Sidebar -->
           <div class="col-md-4">
             <div class="card" style="width: 20rem;">
               <div class="card-body">
-                <button type="button" class="btn btn-outline-secondary" ><i class="fa-solid fa-star"></i>  Personalize</button>
+                <button id="personalizeButton" type="button" class="btn btn-outline-secondary"><i class="fa-solid fa-star"></i>  Personalize</button>
                 <button type="button" class="btn btn-outline-secondary"><i class="fa-solid fa-bell"></i>  Notifications</button>
-                <div class="card-sidebar">
-                  <p>Never miss out an event!!</p>
-                </div>
+                
+                <button type="button" class="btn btn-outline-secondary" id="add_events"><i class="fa-solid fa-folder-plus"></i></i>  Add Events</button>
               </div>
             </div>
-
-            <!-- Favourite -->
-            <div class="watchlist">
-              <h5>Favourite Categories</h5>
-              <div 
-              data-bs-spy="scroll" 
-              data-bs-smooth-scroll="true" 
-              class="scrollspy-example p-1" 
-              style="max-height: 170px; overflow-y: auto; ">
-                  <ul class="list-group">
-                  <li class="list-group-item d-flex justify-content-between">
-                  <span>Sports</span>
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-success">Edit</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                  </div>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between">
-                  <span>Food</span>
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-success">Edit</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                  </div>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between">
-                  <span>Learning</span>
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-success">Edit</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                  </div>
-                  </li>
-                  <li class="list-group-item d-flex justify-content-between">
-                  <span>Gaming</span>
-                  <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-success">Edit</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
-                  </div>
-                  </li>
-                </ul>
-                </div>
           </div>
-        </div>
-      </div>
+
+            
 
       <!-- Suggested News -->
       <div class="content-section">
@@ -219,11 +171,50 @@
             <img src="https://via.placeholder.com/300x150" alt="Suggested News">
           </div>
         </div>
-        
       </div>
+    </div>
 
+    <!-- Modal -->
+    <div class="modal fade" id="personalizeModal" tabindex="-1" aria-labelledby="personalizeModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="personalizeModalLabel">Favourite Categories</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Favourite -->
+            <div class="watchlist">
+              <div 
+              data-bs-spy="scroll" 
+              data-bs-smooth-scroll="true" 
+              class="scrollspy-example p-1" 
+              style="max-height: 170px; overflow-y: auto; ">
+                  <ul class="list-group">
+                    {% for favourite in favourites %}
+                    <li class="list-group-item d-flex justify-content-between">
+                    <span>{{ favourite.topic }}</span>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                      <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button>
+                      <button type="button" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button>
+                    </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                </div>
+          </div>
+        </div>
+      </div>
+          
+      </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+      document.getElementById('personalizeButton').addEventListener('click', function() {
+        var personalizeModal = new bootstrap.Modal(document.getElementById('personalizeModal'));
+        personalizeModal.show();
+      });
+    </script>
   </body>
 </html>
