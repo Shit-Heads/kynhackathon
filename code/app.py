@@ -3,9 +3,16 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 from webscrapping.main import *
+import pymongo
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.secret_key = 'gowtham'  
+
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client["newsAggregator"]
+collection = db["communitynews"]
+# collection_tags = db["tags"]
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -110,10 +117,34 @@ def dashboard():
         cursor.execute(f"select * from users where email = '{username}'")
         account = cursor.fetchone()
         location = account['location']
-        category = 'weather'
+        category = 'f1'
         news = scrape_google_news(location, category)
-        return render_template('index.html', news=news)
+        communitypost = collection.find().sort("_id", pymongo.DESCENDING)
+        return render_template('index.html', news=news, communitypost=communitypost)
     return redirect(url_for("login"))
+
+@app.route('/post', methods=['GET', 'POST'])
+def post():
+    if request.method == 'POST':
+        headline = request.form['headline']
+        date = request.form['date']
+        location = request.form['location']
+        category = request.form['category']
+        description = request.form['description']
+        username = session['username']
+
+        collection.insert_one({"username": username, "headline": headline, "date": date, "location": location, "category": category, "description": description})
+        return redirect(url_for('dashboard'))
+    return render_template('post.html')
+
+@app.route('/viewpost/<post_id>')
+def viewpost(post_id):
+    post = collection.find_one({"_id": ObjectId(post_id)})
+    return render_template("viewpost.html", post=post)
+
+# @app.teardown_appcontext
+# def close_mongo_client(exception):
+#     client.close()
 
 if __name__ == '__main__':
     app.run(debug=True)

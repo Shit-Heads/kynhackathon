@@ -130,6 +130,9 @@
           
           <!-- Sidebar -->
           <div class="col-md-4">
+            <div class="card">
+              <h3>{{ session['location'] }}</h3>
+            </div>
             <div class="card" style="width: 20rem;">
               <div class="card-body">
                 <button id="personalizeButton" type="button" class="btn btn-outline-secondary"><i class="fa-solid fa-star"></i>  Personalize</button>
@@ -156,6 +159,22 @@
               <h5 class="card-title">{{ article.headline }}</h5>
               <p class="card-text">{{ article.date }}</p>
               <a href="https://news.google.com{{ article.url }}" class="btn btn-outline-primary">Read Article</a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div>
+          <h3 align=center>Community Posts</h3>
+          {% for article in communitypost %}
+          <div class="card">
+            <img src="https://news.google.com" class="card-img-top" alt="...">
+            <div class="card-header">
+              {{ article.username }}
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ article.headline }}</h5>
+              <p class="card-text">{{ article.date }}</p>
+              <a href="{{ url_for('viewpost', post_id=article._id) }}" class="btn btn-outline-primary">Read Article</a>
             </div>
           </div>
           {% endfor %}
