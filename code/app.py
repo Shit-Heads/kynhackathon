@@ -16,7 +16,7 @@ collection = db["communitynews"]
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'bingus'
+app.config['MYSQL_PASSWORD'] = 'admin'
 app.config['MYSQL_DB'] = 'kyn'
 
 mysql = MySQL(app)

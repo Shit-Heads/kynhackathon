@@ -48,33 +48,33 @@
     <!-- Content -->
     <div class="card">
       <!-- Tabs -->
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-tabs" >
         <li class="nav-item">
-          <a class="nav-link" href="#">Discover</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Discover</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Trending</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Trending</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Sports</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Sports</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Community</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Community</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Food</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Food</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Clothing</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Clothing</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Health</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Health</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Shopping</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Shopping</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Weather</a>
+          <a class="nav-link" onmouseover="this.style.color='white'" onmouseout="this.style.color='black'" href="#">Weather</a>
         </li>     
       </ul>
 
@@ -130,15 +130,24 @@
           
           <!-- Sidebar -->
           <div class="col-md-4">
-            <div class="card">
-              <h3>{{ session['location'] }}</h3>
-            </div>
-            <div class="card" style="width: 20rem;">
+            <div class="card_location" style="width: 20rem;">
               <div class="card-body">
-                <button id="personalizeButton" type="button" class="btn btn-outline-secondary"><i class="fa-solid fa-star"></i>  Personalize</button>
-                <button type="button" class="btn btn-outline-secondary"><i class="fa-solid fa-bell"></i>  Notifications</button>
-                
-                <button type="button" class="btn btn-outline-secondary" id="add_events"><i class="fa-solid fa-folder-plus"></i></i>  Add Events</button>
+                <h5 class="card-title " style="color: white;">Location</h5>
+                <p class="card-text" style="color: white;">weather.com</p>
+              </div>
+            </div>
+
+            <div class="card_profile" style="width: 20rem;">
+              <div class="card-body">
+                <h5 class="card-title " style="color: white;">Profile</h5>
+              </div>
+            </div>
+
+            <div class="card_personalize" style="width: 20rem;">
+              <div class="card-body">
+                <button id="personalizeButton" type="button" class="btn btn-outline-secondary" style="color: white;"><i class="fa-solid fa-star"></i>  Personalize</button>
+                <a type="button" class="btn btn-outline-secondary" href="{{ url_for('post') }}" style="color: white;"><i class="fa-solid fa-folder-plus"></i>  Add News</a>
+              
               </div>
             </div>
           </div>
@@ -183,7 +192,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="personalizeModal" tabindex="-1" aria-labelledby="personalizeModalLabel" aria-hidden="true">
+    <div class="modal" id="personalizeModal" tabindex="-1" aria-labelledby="personalizeModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
