@@ -26,7 +26,7 @@ def index():
             session['username'] = username
             resume = make_response(redirect(url_for('dashboard')))
             return resume
-    return render_template('login.html')
+    return redirect('login.html')
 
 @app.route('/about')
 def about():
@@ -90,7 +90,7 @@ def login():
                     flash('Login successful!', 'success')
                     return res
                 flash('Login successful!', 'success')
-                return redirect(url_for('dashboard'))
+                return redirect(url_for('favourites'))
             else:
                 flash('Invalid password. Please try again.', 'danger')
         else:
