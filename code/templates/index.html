@@ -37,6 +37,9 @@
           <li class="nav-item_w">
             <a class="nav-link_w" href="#">Pricing</a>
           </li>
+          <li class="nav-item_w">
+            <a class="nav-link_w" href="{{ url_for('logout') }}">Logout</a>
+          </li>
         </ul>
       </div>
       </div>
@@ -141,35 +144,21 @@
 
       <!-- Suggested News -->
       <div class="content-section">
-        <h5>Suggested for you</h5>
-        <div class="row">
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
+        <div>
+          <h3 align=center>Suggested for you</h3>
+          {% for article in news %}
+          <div class="card">
+            <img src="https://via.placeholder.com/400x90" class="card-img-top" alt="...">
+            <div class="card-header">
+              Featured - Source
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">Special title treatment - Headline</h5>
+              <p class="card-text">With supporting text below as a natural lead-in to additional content. - Date</p>
+              <a href="#" class="btn btn-outline-primary">Read Article</a>
+            </div>
           </div>
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
-          </div>
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
-          </div>
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
-          </div>
-        </div>
-        <br>
-        <div class="row">
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
-          </div>
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
-          </div>
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
-          </div>
-          <div class="col">
-            <img src="https://via.placeholder.com/300x150" alt="Suggested News">
-          </div>
+          {% endfor %}
         </div>
       </div>
     </div>

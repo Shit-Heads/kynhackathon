@@ -1,6 +1,7 @@
 from playwright.sync_api import sync_playwright
 
-def scrape_google_news(search_query):
+def scrape_google_news(location, category):
+    search_query = f"{location} {category}"
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -42,13 +43,13 @@ def scrape_google_news(search_query):
 if __name__ == '__main__':
     location = input("Enter Location: ")
     category = input("Enter Category: ")
-    search_query = f"{location} {category}"
-    news = scrape_google_news(search_query)
-    for idx, article in enumerate(news):
-        print(f"Article {idx + 1}:")
-        print(f"Headline: {article['headline']}")
-        print(f"Source: {article['source']}")
-        print(f"Date: {article['date']}")
-        print(f"Image: https://news.google.com{article['image']}")
-        print(f"URL: https://news.google.com{article['url']}")
-        print()
+    news = scrape_google_news(location, category)
+    print(news)
+    # for idx, article in enumerate(news):
+    #     print(f"Article {idx + 1}:")
+    #     print(f"Headline: {article['headline']}")
+    #     print(f"Source: {article['source']}")
+    #     print(f"Date: {article['date']}")
+    #     print(f"Image: https://news.google.com{article['image']}")
+    #     print(f"URL: https://news.google.com{article['url']}")
+    #     print()

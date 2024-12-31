@@ -2,6 +2,7 @@ from flask import *
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+from webscrapping.main import *
 
 app = Flask(__name__)
 app.secret_key = 'gowtham'  
@@ -105,7 +106,13 @@ def logout():
 def dashboard():
     if 'loggedin' in session:
         username = session['username'] # if users name is needed use this variable
-        return render_template('index.html')
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(f"select * from users where email = '{username}'")
+        account = cursor.fetchone()
+        location = account['location']
+        category = 'f1'
+        news = scrape_google_news(location, category)
+        return render_template('index.html', news=news)
     return redirect(url_for("login"))
 
 if __name__ == '__main__':
