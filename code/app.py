@@ -8,7 +8,7 @@ app.secret_key = 'gowtham'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_PASSWORD'] = 'bingus'
 app.config['MYSQL_DB'] = 'kyn'
 
 mysql = MySQL(app)
@@ -33,7 +33,7 @@ def about():
     return render_template('about.html')
 
 @app.route('/picfav')
-def pickfav():
+def picfav():
     return render_template('picfav.html')
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -55,7 +55,9 @@ def register():
             cursor.execute('INSERT INTO users (firstname, lastname, email, password, location) VALUES (%s, %s, %s, %s, %s)', (firstname, lastname, email, password, location))
             mysql.connection.commit()
             flash('Registration successful!', 'success')
-            return redirect(url_for('login'))
+            session['loggedin'] = True
+            session['username'] = email
+            return redirect(url_for('picfav'))
 
     return render_template('login.html')
 
@@ -103,7 +105,7 @@ def logout():
 def dashboard():
     if 'loggedin' in session:
         username = session['username'] # if users name is needed use this variable
-        return render_template('picfav.html')
+        return render_template('index.html')
     return redirect(url_for("login"))
 
 if __name__ == '__main__':

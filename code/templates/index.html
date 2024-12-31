@@ -16,7 +16,7 @@
         <a class="navbar-brand" href="#">
           NA
         </a>
-        <input class="form-control search-bar" type="text" placeholder="Search the web">
+        <input class="form-control search-bar" type="text" placeholder="Search News">
         <button 
         class="navbar-toggler" 
         type="button" 
@@ -146,7 +146,9 @@
 
             <!-- Favourite -->
             <div class="watchlist">
-              <h5>Favourite Categories</h5>
+              <h5>Picks for you</h5>
+              <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off">
+              <label class="btn btn-primary" for="btn-check">Single toggle</label>
               <div 
               data-bs-spy="scroll" 
               data-bs-smooth-scroll="true" 
@@ -188,7 +190,7 @@
       </div>
 
       <!-- Suggested News -->
-      <div class="content-section">
+      <div class="content-section" style="margin-bottom: 1pc;">
         <h5>Suggested for you</h5>
         <div class="row">
           <div class="col">
