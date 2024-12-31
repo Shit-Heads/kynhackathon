@@ -18,7 +18,7 @@ collection = db["communitynews"]
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Anjana@2005'
+app.config['MYSQL_PASSWORD'] = 'bingus'
 app.config['MYSQL_DB'] = 'kyn'
 
 mysql = MySQL(app)
@@ -139,9 +139,11 @@ def dashboard():
         account = cursor.fetchone()
         firstname = account['firstname']
         location = account['location']
+        cursor.execute(f"select topic from favourites where username = '{username}'")
+        fav = cursor.fetchall()
         # news = scrape_google_news(location, category)
         # communitypost = collection.find().sort("_id", pymongo.DESCENDING)
-        return render_template('index.html', firstname=firstname, location=location)  # , news=news, communitypost=communitypost)
+        return render_template('index.html', firstname=firstname, location=location, favourites=fav)  # , news=news, communitypost=communitypost)
     return redirect(url_for("login"))
 
 @app.route('/post', methods=['GET', 'POST'])
