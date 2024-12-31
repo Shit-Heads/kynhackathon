@@ -41,10 +41,10 @@ def scrape_google_news(location, category):
         return news_data
 
 if __name__ == '__main__':
-    location = input("Enter Location: ")
-    category = input("Enter Category: ")
-    news = scrape_google_news(location, category)
-    print(news)
+    #location = #input("Enter Location: ")
+    #category = #input("Enter Category: ")
+    news = scrape_google_news("chennai", "f1")
+    for i in news: print(i)
     # for idx, article in enumerate(news):
     #     print(f"Article {idx + 1}:")
     #     print(f"Headline: {article['headline']}")

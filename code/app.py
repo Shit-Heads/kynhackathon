@@ -110,7 +110,7 @@ def dashboard():
         cursor.execute(f"select * from users where email = '{username}'")
         account = cursor.fetchone()
         location = account['location']
-        category = 'f1'
+        category = 'weather'
         news = scrape_google_news(location, category)
         return render_template('index.html', news=news)
     return redirect(url_for("login"))

@@ -148,14 +148,14 @@
           <h3 align=center>Suggested for you</h3>
           {% for article in news %}
           <div class="card">
-            <img src="https://via.placeholder.com/400x90" class="card-img-top" alt="...">
+            <img src="https://news.google.com{{ article.image }}" class="card-img-top" alt="...">
             <div class="card-header">
-              Featured - Source
+              {{ article.source }}
             </div>
             <div class="card-body">
-              <h5 class="card-title">Special title treatment - Headline</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content. - Date</p>
-              <a href="#" class="btn btn-outline-primary">Read Article</a>
+              <h5 class="card-title">{{ article.headline }}</h5>
+              <p class="card-text">{{ article.date }}</p>
+              <a href="https://news.google.com{{ article.url }}" class="btn btn-outline-primary">Read Article</a>
             </div>
           </div>
           {% endfor %}
