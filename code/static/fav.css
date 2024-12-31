@@ -1,12 +1,45 @@
-.card{
-    width:100vh;
-    height:100vh;
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
-
-}
-.wrapper{
-    align-items:center;
 }
 
+.card {
+    width: 100vh;
+    height: 100vh;
+    background: linear-gradient(to right, #c6b8b5, #e3d7ce);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu{
+    margin:10px;
+}
+.dropdown{
+    margin:15px;
+}
+.form-check{
+    margin-left:10px;
+    margin-right:10px;
+
+}
+.row{
+    margin-top:10px;
+}
+.col{
+    margin:20px;
+}
+.card-title{
+    margin-top:10px;   
+}
+#save_btn{
+    border-radius: 5px;
+}

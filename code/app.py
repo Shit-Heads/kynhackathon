@@ -26,7 +26,7 @@ def index():
             session['username'] = username
             resume = make_response(redirect(url_for('dashboard')))
             return resume
-    return redirect('login.html')
+    return redirect(url_for('login'))
 
 @app.route('/about')
 def about():
@@ -108,10 +108,11 @@ def logout():
     res.delete_cookie('password')
     return res
 
+
 @app.route('/favourites', methods=['GET', 'POST'])
 def favourites():
     if request.method == 'POST':
-        topics = request.form['topics'].split(',')
+        topics = request.form.getlist('topics')
         username = session['username']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         for topic in topics:
