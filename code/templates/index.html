@@ -174,10 +174,13 @@
                   <img src="{{ article.image }}" style="height: 100%; width: 100%; border-radius: 10px;" align=left>
                 </div>
               </div>
+              <button class="btn btn-outline-secondary fact-check-btn" data-headline="{{ article.headline }}">Fact Check</button>
+              <span class="fact-check-result" style="display: none;"></span>
             </div>
           </div>
           {% endfor %}
         </div>
+
         <div>
           <h3 align=center>Community Posts</h3>
           {% for article in communitypost %}
@@ -196,6 +199,8 @@
                   <img src="{{ article.image_url }}" style="height: 100%; width: 100%; border-radius: 10px;" align=left>
                 </div>
               </div>
+              <button class="btn btn-outline-secondary fact-check-btn" data-headline="{{ article.headline }}">Fact Check</button>
+              <span class="fact-check-result" style="display: none;"></span>
             </div>
           </div>
           {% endfor %}
@@ -237,6 +242,30 @@
           
       </div>
     </div>
+    <script>
+      document.querySelectorAll('.fact-check-btn').forEach(button => {
+        button.addEventListener('click', function() {
+          const headline = this.getAttribute('data-headline');
+          fetch('/factcheck', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ headline: headline })
+          })
+          .then(response => response.json())
+          .then(data => {
+            const resultSpan = this.nextElementSibling;
+            if (data.is_true || data.no_matching_claims) {
+              resultSpan.innerHTML = '<i class="fa-solid fa-check" style="color: green;"></i>';
+            } else {
+              resultSpan.innerHTML = '<i class="fa-solid fa-times" style="color: red;"></i>';
+            }
+            resultSpan.style.display = 'inline';
+          });
+        });
+      });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script>

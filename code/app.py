@@ -1,4 +1,4 @@
-from flask import *
+from flask import Flask, request, jsonify, render_template, session, redirect, url_for, flash, make_response
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from webscrapping.main import *
@@ -8,9 +8,10 @@ from bson.objectid import ObjectId
 from werkzeug.utils import secure_filename
 import base64
 import os
+from factcheck import check_fact  
 
 app = Flask(__name__)
-app.secret_key = 'gowtham'  
+app.secret_key = 'gowtham'
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["newsAggregator"]
@@ -99,7 +100,6 @@ def login():
                 flash('Invalid password. Please try again.', 'danger')
         else:
             flash('No account found. Please sign up first.', 'warning')
-            return redirect(url_for('register'))
 
     return render_template('login.html')
 
@@ -170,6 +170,15 @@ def post():
         return redirect(url_for('dashboard'))
     return render_template('post.html')
 
+@app.route('/factcheck', methods=['POST'])
+def factcheck_route():
+    data = request.json
+    headline = data.get('headline')
+    results = check_fact(headline)
+    is_true = any(result['claim_conclusion'].lower() in ['true', 'correct'] for result in results)
+    no_matching_claims = len(results) == 0
+    return jsonify({'is_true': is_true, 'no_matching_claims': no_matching_claims})
+
 @app.route('/viewpost/<post_id>')
 def viewpost(post_id):
     post = collection.find_one({"_id": ObjectId(post_id)})
@@ -179,10 +188,6 @@ def viewpost(post_id):
     else:
         image_url = None
     return render_template("viewpost.html", post=post, image_url=image_url)
-
-# @app.teardown_appcontext
-# def close_mongo_client(exception):
-#     client.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
