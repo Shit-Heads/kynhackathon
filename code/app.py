@@ -1,10 +1,13 @@
 from flask import *
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
-import re
 from webscrapping.main import *
 import pymongo
+import gridfs
 from bson.objectid import ObjectId
+from werkzeug.utils import secure_filename
+import base64
+import os
 
 app = Flask(__name__)
 app.secret_key = 'gowtham'  
@@ -12,11 +15,11 @@ app.secret_key = 'gowtham'
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["newsAggregator"]
 collection = db["communitynews"]
-# collection_tags = db["tags"]
+fs = gridfs.GridFS(db)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_PASSWORD'] = 'bingus'
 app.config['MYSQL_DB'] = 'kyn'
 
 mysql = MySQL(app)
@@ -129,10 +132,21 @@ def dashboard():
         cursor.execute(f"select * from users where email = '{username}'")
         account = cursor.fetchone()
         location = account['location']
-        category = 'f1'
+        category = 'weather'
         news = scrape_google_news(location, category)
         communitypost = collection.find().sort("_id", pymongo.DESCENDING)
-        return render_template('index.html', news=news, communitypost=communitypost)
+
+        posts_with_images = []
+        for post in communitypost:
+            if post.get('image_id'):
+                image = fs.get(post['image_id']).read()
+                image_url = f"data:image/jpeg;base64,{base64.b64encode(image).decode('utf-8')}"
+                post['image_url'] = image_url
+            else:
+                post['image_url'] = None
+            posts_with_images.append(post)
+
+        return render_template('index.html', news=news, communitypost=posts_with_images)
     return redirect(url_for("login"))
 
 @app.route('/post', methods=['GET', 'POST'])
@@ -145,14 +159,26 @@ def post():
         description = request.form['description']
         username = session['username']
 
-        collection.insert_one({"username": username, "headline": headline, "date": date, "location": location, "category": category, "description": description})
+        image = request.files['image']
+        if image:
+            filename = secure_filename(image.filename)
+            file_id = fs.put(image, filename=filename)
+        else:
+            file_id = None
+
+        collection.insert_one({"username": username, "headline": headline, "date": date, "location": location, "category": category, "description": description, "image_id": file_id})
         return redirect(url_for('dashboard'))
     return render_template('post.html')
 
 @app.route('/viewpost/<post_id>')
 def viewpost(post_id):
     post = collection.find_one({"_id": ObjectId(post_id)})
-    return render_template("viewpost.html", post=post)
+    if post.get('image_id'):
+        image = fs.get(post['image_id']).read()
+        image_url = f"data:image/jpeg;base64,{base64.b64encode(image).decode('utf-8')}"
+    else:
+        image_url = None
+    return render_template("viewpost.html", post=post, image_url=image_url)
 
 # @app.teardown_appcontext
 # def close_mongo_client(exception):

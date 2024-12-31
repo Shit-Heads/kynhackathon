@@ -160,14 +160,20 @@
           <h3 align=center>Suggested for you</h3>
           {% for article in news %}
           <div class="card">
-            <img src="https://news.google.com{{ article.image }}" class="card-img-top" alt="...">
             <div class="card-header">
               {{ article.source }}
             </div>
             <div class="card-body">
-              <h5 class="card-title">{{ article.headline }}</h5>
-              <p class="card-text">{{ article.date }}</p>
-              <a href="https://news.google.com{{ article.url }}" class="btn btn-outline-primary">Read Article</a>
+              <div class="row">
+                <div class="col-8">
+                  <h5 class="card-title">{{ article.headline }}</h5>
+                  <p class="card-text">{{ article.date }}</p>
+                  <a href="https://news.google.com{{ article.url }}" class="btn btn-outline-primary">Read Article</a>
+                </div>
+                <div class="col-4">
+                  <img src="{{ article.image }}" style="height: 100%; width: 100%; border-radius: 10px;" align=left>
+                </div>
+              </div>
             </div>
           </div>
           {% endfor %}
@@ -176,14 +182,20 @@
           <h3 align=center>Community Posts</h3>
           {% for article in communitypost %}
           <div class="card">
-            <img src="https://news.google.com" class="card-img-top" alt="...">
             <div class="card-header">
               {{ article.username }}
             </div>
             <div class="card-body">
-              <h5 class="card-title">{{ article.headline }}</h5>
-              <p class="card-text">{{ article.date }}</p>
-              <a href="{{ url_for('viewpost', post_id=article._id) }}" class="btn btn-outline-primary">Read Article</a>
+              <div class="row">
+                <div class="col-8">
+                  <h5 class="card-title">{{ article.headline }}</h5>
+                  <p class="card-text">{{ article.date }}</p>
+                  <a href="{{ url_for('viewpost', post_id=article._id) }}" class="btn btn-outline-primary">Read Article</a>
+                </div>
+                <div class="col-4">
+                  <img src="{{ article.image_url }}" style="height: 100%; width: 100%; border-radius: 10px;" align=left>
+                </div>
+              </div>
             </div>
           </div>
           {% endfor %}
