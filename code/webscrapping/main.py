@@ -1,5 +1,6 @@
 from playwright.sync_api import sync_playwright
 import requests
+from app import LIMIT
 
 def get_redirect_url(url):
     try:
@@ -11,7 +12,7 @@ def get_redirect_url(url):
 def scrape_google_news(location, category):
     search_query = f"{location} {category}"
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        browser = p.firefox.launch(headless=True)
         page = browser.new_page()
         
         # Navigate to Google News with the search query
@@ -24,7 +25,7 @@ def scrape_google_news(location, category):
 
         news_data = []
 
-        for article in articles[:15]:  # Limit to 15 articles
+        for article in articles[:LIMIT]:  # Limit to 15 articles
             headline_element = article.query_selector('a.JtKRv')
             source_element = article.query_selector('.vr1PYe')
             image_element = article.query_selector('.Quavad')

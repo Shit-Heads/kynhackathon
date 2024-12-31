@@ -1,20 +1,19 @@
-from flask import Flask, request, jsonify, render_template, session, redirect, url_for, flash, make_response
+from flask import *
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
-import os
-import secrets
-from webscrapping.main import *
-from webscrapping.trending import *
 import pymongo
 import gridfs
 from bson.objectid import ObjectId
-from werkzeug.utils import secure_filename
+import secrets
 import base64
-import os
-from factcheck import check_fact  
+from werkzeug.utils import secure_filename
+from webscrapping.main import *
+from factcheck import check_fact
 
 app = Flask(__name__)
 app.secret_key = 'gowtham'
+
+LIMIT = 30
 
 client = pymongo.MongoClient("mongodb://localhost:27017/")
 db = client["newsAggregator"]
@@ -25,15 +24,13 @@ app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'bingus'
 app.config['MYSQL_DB'] = 'kyn'
-
 mysql = MySQL(app)
+
 def generate_csrf_token():
     if 'csrf_token' not in session:
         session['csrf_token'] = secrets.token_hex(16)
     return session['csrf_token']
-
 app.jinja_env.globals['csrf_token'] = generate_csrf_token
-
 
 @app.route('/')
 def index():
@@ -53,10 +50,6 @@ def index():
 @app.route('/about')
 def about():
     return render_template('about.html')
-
-@app.route('/picfav')
-def picfav():
-    return render_template('picfav.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -110,7 +103,6 @@ def login():
                 flash('Invalid password. Please try again.', 'danger')
         else:
             flash('No account found. Please sign up first.', 'warning')
-
     return render_template('login.html')
 
 @app.route('/logout')
@@ -124,15 +116,17 @@ def logout():
 
 @app.route('/favourites', methods=['GET', 'POST'])
 def favourites():
-    if request.method == 'POST':
-        topics = request.form.getlist('topics')
-        username = session['username']
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        for topic in topics:
-            cursor.execute('INSERT INTO favourites (username, topic) VALUES (%s, %s)', (username, topic.strip()))
-        mysql.connection.commit()
-        return redirect(url_for('dashboard'))
-    return render_template('favourites.html')
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            topics = request.form.getlist('topics')
+            username = session['username']
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            for topic in topics:
+                cursor.execute('INSERT INTO favourites (username, topic) VALUES (%s, %s)', (username, topic.strip()))
+            mysql.connection.commit()
+            return redirect(url_for('dashboard'))
+        return render_template('favourites.html')
+    return redirect(url_for('login'))
 
 @app.route('/index')
 def dashboard():
@@ -145,9 +139,11 @@ def dashboard():
         location = account['location']
         cursor.execute(f"select topic from favourites where username = '{username}'")
         fav = cursor.fetchall()
-        category = 'f1'
+        cat = []
+        for i in range(len(fav)):
+            cat.append(fav[i]['topic'])
+        category = ' and '.join(cat)
         news = scrape_google_news(location, category)
-        trending = scrape_trending_news(category)
         communitypost = collection.find().sort("_id", pymongo.DESCENDING)
 
         posts_with_images = []
@@ -160,7 +156,7 @@ def dashboard():
                 post['image_url'] = None
             posts_with_images.append(post)
 
-        return render_template('index.html', news=news, communitypost=posts_with_images, trending=trending, firstname=firstname, location=location, favourites=fav)
+        return render_template('index.html', news=news, communitypost=posts_with_images, firstname=firstname, location=location, favourites=fav)
     return redirect(url_for("login"))
 
 @app.route('/index/<news_category>')
@@ -172,9 +168,10 @@ def categorydashboard(news_category):
         account = cursor.fetchone()
         firstname = account['firstname']
         location = account['location']
+        cursor.execute(f"select topic from favourites where username = '{username}'")
+        fav = cursor.fetchall()
         category = news_category
         news = scrape_google_news(location, category)
-        trending = scrape_trending_news(category)
         communitypost = collection.find().sort("_id", pymongo.DESCENDING)
 
         posts_with_images = []
@@ -187,29 +184,59 @@ def categorydashboard(news_category):
                 post['image_url'] = None
             posts_with_images.append(post)
 
-        return render_template('index.html', news=news, communitypost=posts_with_images, trending=trending)
+        return render_template('index.html', news=news, communitypost=posts_with_images, firstname=firstname, location=location, favourites=fav)
+    return redirect(url_for("login"))
+
+@app.route('/index', methods=['GET', 'POST'])
+def searchdashboard():
+    if 'loggedin' in session and request.method == 'POST':
+        username = session['username']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(f"SELECT firstname, location FROM users WHERE email = '{username}'")
+        account = cursor.fetchone()
+        firstname = account['firstname']
+        location = account['location']
+        cursor.execute(f"select topic from favourites where username = '{username}'")
+        fav = cursor.fetchall()
+        category = request.form['search']
+        news = scrape_google_news(location, category)
+
+        communitypost = collection.find().sort("_id", pymongo.DESCENDING)
+        posts_with_images = []
+        for post in communitypost:
+            if post.get('image_id'):
+                image = fs.get(post['image_id']).read()
+                image_url = f"data:image/jpeg;base64,{base64.b64encode(image).decode('utf-8')}"
+                post['image_url'] = image_url
+            else:
+                post['image_url'] = None
+            posts_with_images.append(post)
+
+        return render_template('index.html', news=news, communitypost=posts_with_images, firstname=firstname, location=location, favourites=fav)
     return redirect(url_for("login"))
 
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-    if request.method == 'POST':
-        headline = request.form['headline']
-        date = request.form['date']
-        location = request.form['location']
-        category = request.form['category']
-        description = request.form['description']
-        username = session['username']
+    if 'loggedin' in session:
+        if request.method == 'POST':
+            headline = request.form['headline']
+            date = request.form['date']
+            location = request.form['location']
+            category = request.form['category']
+            description = request.form['description']
+            username = session['username']
 
-        image = request.files['image']
-        if image:
-            filename = secure_filename(image.filename)
-            file_id = fs.put(image, filename=filename)
-        else:
-            file_id = None
+            image = request.files['image']
+            if image:
+                filename = secure_filename(image.filename)
+                file_id = fs.put(image, filename=filename)
+            else:
+                file_id = None
 
-        collection.insert_one({"username": username, "headline": headline, "date": date, "location": location, "category": category, "description": description, "image_id": file_id})
-        return redirect(url_for('dashboard'))
-    return render_template('post.html')
+            collection.insert_one({"username": username, "headline": headline, "date": date, "location": location, "category": category, "description": description, "image_id": file_id})
+            return redirect(url_for('dashboard'))
+        return render_template('post.html')
+    return redirect(url_for('login'))
 
 @app.route('/factcheck', methods=['POST'])
 def factcheck_route():
@@ -222,17 +249,15 @@ def factcheck_route():
 
 @app.route('/viewpost/<post_id>')
 def viewpost(post_id):
-    post = collection.find_one({"_id": ObjectId(post_id)})
-    if post.get('image_id'):
-        image = fs.get(post['image_id']).read()
-        image_url = f"data:image/jpeg;base64,{base64.b64encode(image).decode('utf-8')}"
-    else:
-        image_url = None
-    return render_template("viewpost.html", post=post, image_url=image_url)
-
-# @app.teardown_appcontext
-# def close_mongo_client(exception):
-#     client.close()
+    if 'loggedin' in session:
+        post = collection.find_one({"_id": ObjectId(post_id)})
+        if post.get('image_id'):
+            image = fs.get(post['image_id']).read()
+            image_url = f"data:image/jpeg;base64,{base64.b64encode(image).decode('utf-8')}"
+        else:
+            image_url = None
+        return render_template("viewpost.html", post=post, image_url=image_url)
+    return redirect(url_for('login'))
 
 @app.route('/update_location', methods=['POST'])
 def update_location():
