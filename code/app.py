@@ -132,7 +132,7 @@ def dashboard():
         cursor.execute(f"select * from users where email = '{username}'")
         account = cursor.fetchone()
         location = account['location']
-        category = 'weather'
+        category = 'f1'
         news = scrape_google_news(location, category)
         communitypost = collection.find().sort("_id", pymongo.DESCENDING)
 

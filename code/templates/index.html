@@ -169,13 +169,13 @@
                   <h5 class="card-title">{{ article.headline }}</h5>
                   <p class="card-text">{{ article.date }}</p>
                   <a href="https://news.google.com{{ article.url }}" class="btn btn-outline-primary">Read Article</a>
+                  <button class="btn btn-outline-secondary fact-check-btn" data-headline="{{ article.headline }}">Fact Check</button>
+                  <span class="fact-check-result" style="display: none;"></span>
                 </div>
                 <div class="col-4">
                   <img src="{{ article.image }}" style="height: 100%; width: 100%; border-radius: 10px;" align=left>
                 </div>
               </div>
-              <button class="btn btn-outline-secondary fact-check-btn" data-headline="{{ article.headline }}">Fact Check</button>
-              <span class="fact-check-result" style="display: none;"></span>
             </div>
           </div>
           {% endfor %}
@@ -194,13 +194,13 @@
                   <h5 class="card-title">{{ article.headline }}</h5>
                   <p class="card-text">{{ article.date }}</p>
                   <a href="{{ url_for('viewpost', post_id=article._id) }}" class="btn btn-outline-primary">Read Article</a>
+                  <button class="btn btn-outline-secondary fact-check-btn" data-headline="{{ article.headline }}">Fact Check</button>
+                  <span class="fact-check-result" style="display: none;"></span>
                 </div>
                 <div class="col-4">
                   <img src="{{ article.image_url }}" style="height: 100%; width: 100%; border-radius: 10px;" align=left>
                 </div>
               </div>
-              <button class="btn btn-outline-secondary fact-check-btn" data-headline="{{ article.headline }}">Fact Check</button>
-              <span class="fact-check-result" style="display: none;"></span>
             </div>
           </div>
           {% endfor %}
