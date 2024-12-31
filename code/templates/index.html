@@ -130,16 +130,30 @@
           
           <!-- Sidebar -->
           <div class="col-md-4">
-            <div class="card_location" style="width: 20rem;">
-              <div class="card-body">
-                <h5 class="card-title " style="color: white;">Location</h5>
-                <p class="card-text" style="color: white;">weather.com</p>
+            <div class="dropdown">
+              <div class="card_location" style="width: 20rem;">
+                <div class="card-body">
+                  <h5 class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="color: white; cursor:pointer;" id="location-display">{{location}}</h5>
+                  <span id="temperature-display" style=" margin-top:10px; font-size: 25px; color:white;"></span>
+                  
+                  <div class="dropdown-menu scrollspy-example" style="background-color: #c6ccd2; max-height: 290px; border-radius: 20px; width:240px; overflow-y: auto;">
+                    <ul class="list-unstyled">
+                      
+                      {% for district in ['Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kancheepuram', 'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Mayiladuthurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukkottai', 'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi', 'Thanjavur', 'Theni', 'Thiruvallur', 'Thiruvarur', 'Thoothukudi', 'Tiruchirappalli', 'Tirunelveli', 'Tirupattur', 'Tiruppur', 'Tiruvannamalai', 'Vellore', 'Viluppuram', 'Virudhunagar'] %}
+                        <li><a class="dropdown-item" href="#" onclick="updateLocation('{{ district }}')">{{ district }}</a></li>
+                      {% endfor %}
+
+                    </ul>
+                  </div>
+                  <h2></h2>
+                  <p class="card-text"><a href="https://weather.com/en-IN/weather/today/l/13.03,80.21?par=google" style="color: white; text-decoration: none;">weather.com</a></p>
+                </div>
               </div>
             </div>
 
             <div class="card_profile" style="width: 20rem;">
               <div class="card-body">
-                <h5 class="card-title " style="color: white;">Profile</h5>
+                <h5 class="card-title" style="color: white;">{{firstname}}<span style="float: right; font-size: 25px;"><i class="fa-solid fa-person-circle-check"></i></span></h5>
               </div>
             </div>
 
@@ -147,7 +161,6 @@
               <div class="card-body">
                 <button id="personalizeButton" type="button" class="btn btn-outline-secondary" style="color: white;"><i class="fa-solid fa-star"></i>  Personalize</button>
                 <a type="button" class="btn btn-outline-secondary" href="{{ url_for('post') }}" style="color: white;"><i class="fa-solid fa-folder-plus"></i>  Add News</a>
-              
               </div>
             </div>
           </div>
@@ -229,7 +242,6 @@
                     <li class="list-group-item d-flex justify-content-between">
                     <span>{{ favourite.topic }}</span>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                      <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button>
                       <button type="button" class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button>
                     </div>
                     </li>
@@ -274,5 +286,53 @@
         personalizeModal.show();
       });
     </script>
+<script>
+  async function fetchTemperature(district) {
+    const apiKey = '03d732d8a636b03f36cfae6e3a634'; // Replace with your API key
+    const apiUrl = `http://api.weatherstack.com/current?access_key=${apiKey}&query=${district}`;
+    
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Failed to fetch weather data');
+        }
+        const data = await response.json();
+        console.log('Weather data:', data); // Log the API response
+        if (data.current && data.current.temperature) {
+            const temperature = data.current.temperature;
+            document.getElementById('temperature-display').innerText = `${temperature}°C`;
+        } else {
+            throw new Error('Temperature data not found');
+        }
+    } catch (error) {
+        document.getElementById('temperature-display').innerText = `N/A`;
+        console.error('Error fetching temperature:', error);
+    }
+  }
+
+  function updateLocation(newLocation) {
+    fetch('/update_location', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ location: newLocation, csrf_token: '{{ csrf_token() }}' })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById('location-display').innerText = newLocation;
+        fetchTemperature(newLocation); // Fetch and display the temperature
+      } else {
+        alert('Failed to update location: ' + data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  // Initial fetch for the current location
+  fetchTemperature('{{ location }}');
+</script>
+
   </body>
 </html>

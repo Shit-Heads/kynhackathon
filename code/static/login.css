@@ -19,7 +19,7 @@ body{
     justify-content: center;
     align-items: center;
     min-height: 110vh;
-    background: rgba(39, 39, 39, 0.4);
+    background: #27272766;
 }
 .nav{
     position: fixed;
