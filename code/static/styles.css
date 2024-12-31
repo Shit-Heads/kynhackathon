@@ -103,3 +103,50 @@
   .modal-backdrop {
     z-index: -1;
   }
+  .additional-content {
+    margin-top: 10px;
+    background-color: #5E686D;
+    padding: 20px;
+    border-radius: 20px;
+    color:white;
+  }
+  
+  .additional-content h3 {
+    font-size: 18px;
+    color:white;
+    margin-bottom: 15px;
+  }
+  
+  .suggestions {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .news-topic, .trending-articles {
+    width: 45%;
+  }
+  
+  .news-topic h4, .trending-articles h4 {
+    font-size: 16px;
+    color:white;
+    font-weight: 500;
+  }
+
+  
+  .news-topic a, .trending-articles a {
+    text-decoration: none;
+    color: #007bff;
+  }
+  
+  .news-topic a:hover, .trending-articles a:hover {
+    text-decoration: underline;
+  }
+  .card_profile,
+.card_personalize,
+.card_location {
+    margin: 20px 0; /* Reduce the margin to decrease the space between cards */
+}
+#aw{
+  color:rgb(92, 178, 202);
+  font-size: 10px;
+}
