@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, render_template, session, redirect, u
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 from webscrapping.main import *
+from webscrapping.trending import *
 import pymongo
 import gridfs
 from bson.objectid import ObjectId
@@ -134,6 +135,7 @@ def dashboard():
         location = account['location']
         category = 'f1'
         news = scrape_google_news(location, category)
+        trending = scrape_trending_news(category)
         communitypost = collection.find().sort("_id", pymongo.DESCENDING)
 
         posts_with_images = []
@@ -146,7 +148,33 @@ def dashboard():
                 post['image_url'] = None
             posts_with_images.append(post)
 
-        return render_template('index.html', news=news, communitypost=posts_with_images)
+        return render_template('index.html', news=news, communitypost=posts_with_images, trending=trending)
+    return redirect(url_for("login"))
+
+@app.route('/index/<news_category>')
+def categorydashboard(news_category):
+    if 'loggedin' in session:
+        username = session['username'] # if users name is needed use this variable
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute(f"select * from users where email = '{username}'")
+        account = cursor.fetchone()
+        location = account['location']
+        category = news_category
+        news = scrape_google_news(location, category)
+        trending = scrape_trending_news(category)
+        communitypost = collection.find().sort("_id", pymongo.DESCENDING)
+
+        posts_with_images = []
+        for post in communitypost:
+            if post.get('image_id'):
+                image = fs.get(post['image_id']).read()
+                image_url = f"data:image/jpeg;base64,{base64.b64encode(image).decode('utf-8')}"
+                post['image_url'] = image_url
+            else:
+                post['image_url'] = None
+            posts_with_images.append(post)
+
+        return render_template('index.html', news=news, communitypost=posts_with_images,  trending=trending)
     return redirect(url_for("login"))
 
 @app.route('/post', methods=['GET', 'POST'])

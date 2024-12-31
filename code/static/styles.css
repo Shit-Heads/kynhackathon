@@ -99,3 +99,6 @@
     background-color: #3A3960;
   }
   
+  .modal-backdrop {
+    z-index: -1;
+  }
