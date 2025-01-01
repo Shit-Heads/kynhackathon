@@ -13,7 +13,7 @@
     <nav class="navbar navbar-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
-          InfoStream
+          Welcome to InfoStream
         </a>
         <form method="post" action="{{ url_for('searchdashboard') }}">
           <!-- <input class="form-control search-bar" type="text" placeholder="Search the web"> -->
@@ -181,22 +181,22 @@
           <div class="col-md-4">
             <div class="dropdown">
               <div class="card_location" style="width: 20rem;">
-                <div class="card-body">
-                  <h5 class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="color: white; cursor:pointer;" id="location-display">{{location}}</h5>
-                  <span id="temperature-display" style=" margin-top:10px; font-size: 25px; color:white;"></span>
+              <div class="card-body">
+                <h5 class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="color: white; cursor:pointer;" id="location-display">{{location}}</h5>
+                <span id="temperature-display" style=" margin-top:10px; font-size: 25px; color:white;"></span>
+                
+                <div class="dropdown-menu scrollspy-example" style="background-color: #c6ccd2; max-height: 290px; border-radius: 20px; width:240px; overflow-y: auto;">
+                <ul class="list-unstyled">
                   
-                  <div class="dropdown-menu scrollspy-example" style="background-color: #c6ccd2; max-height: 290px; border-radius: 20px; width:240px; overflow-y: auto;">
-                    <ul class="list-unstyled">
-                      
-                      {% for district in ['Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kancheepuram', 'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Mayiladuthurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukkottai', 'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi', 'Thanjavur', 'Theni', 'Thiruvallur', 'Thiruvarur', 'Thoothukudi', 'Tiruchirappalli', 'Tirunelveli', 'Tirupattur', 'Tiruppur', 'Tiruvannamalai', 'Vellore', 'Viluppuram', 'Virudhunagar'] %}
-                        <li><a class="dropdown-item" href="#" onclick="updateLocation('{{ district }}')">{{ district }}</a></li>
-                      {% endfor %}
+                  {% for district in ['Chengalpattu', 'Chennai', 'Coimbatore', 'Cuddalore', 'Dharmapuri', 'Dindigul', 'Erode', 'Kallakurichi', 'Kancheepuram', 'Kanyakumari', 'Karur', 'Krishnagiri', 'Madurai', 'Mayiladuthurai', 'Nagapattinam', 'Namakkal', 'Nilgiris', 'Perambalur', 'Pudukkottai', 'Ramanathapuram', 'Ranipet', 'Salem', 'Sivaganga', 'Tenkasi', 'Thanjavur', 'Theni', 'Thiruvallur', 'Thiruvarur', 'Thoothukudi', 'Tiruchirappalli', 'Tirunelveli', 'Tirupattur', 'Tiruppur', 'Tiruvannamalai', 'Vellore', 'Viluppuram', 'Virudhunagar'] %}
+                  <li><a class="dropdown-item" href="#" onclick="updateLocation('{{ district }}'); location.reload();">{{ district }}</a></li>
+                  {% endfor %}
 
-                    </ul>
-                  </div>
-                  <h2></h2>
-                  <p class="card-text"><a href="https://weather.com/en-IN/weather/today/l/13.03,80.21?par=google" style="color: white; text-decoration: none;">weather.com</a></p>
+                </ul>
                 </div>
+                <h2></h2>
+                <p class="card-text"><a href="https://weather.com/en-IN/weather/today/l/13.03,80.21?par=google" style="color: white; text-decoration: none;">weather.com</a></p>
+              </div>
               </div>
             </div>
 
