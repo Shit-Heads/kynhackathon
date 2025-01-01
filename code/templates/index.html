@@ -41,7 +41,7 @@
             <a class="nav-link_w" href="{{ url_for('about') }}">About</a>
           </li>
           <li class="nav-item_w">
-            <a class="nav-link_w" href="{{ url_for('pricing') }}">Pricing</a>
+            <a class="nav-link_w" href="{{ url_for('currsubscription') }}">Manage Subscription</a>
           </li>
           <li class="nav-item_w">
             <a class="nav-link_w" href="{{ url_for('logout') }}">Logout</a>
@@ -351,7 +351,7 @@
     </script>
 <script>
   async function fetchTemperature(district) {
-    const apiKey = '03d732d8a636b03f36cfae6e3a634'; // Replace with your API key
+    const apiKey = '03d732d8a636b03f36cfae6e3a634618'; // Replace with your API key
     const apiUrl = `http://api.weatherstack.com/current?access_key=${apiKey}&query=${district}`;
     
     try {

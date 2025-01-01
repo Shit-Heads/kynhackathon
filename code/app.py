@@ -22,7 +22,7 @@ fs = gridfs.GridFS(db)
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_PASSWORD'] = 'bingus'
 app.config['MYSQL_DB'] = 'kyn'
 mysql = MySQL(app)
 
@@ -199,7 +199,7 @@ def searchdashboard():
         cursor.execute(f"SELECT firstname, location FROM users WHERE email = '{username}'")
         account = cursor.fetchone()
         firstname = account['firstname']
-        location = account['location']
+        location = " "
         cursor.execute(f"select topic from favourites where username = '{username}'")
         fav = cursor.fetchall()
         category = request.form['search']
@@ -276,6 +276,10 @@ def update_location():
         mysql.connection.commit()
         return jsonify(success=True)
     return jsonify(success=False)
+
+@app.route('/subscription')
+def currsubscription():
+    return render_template("managesub.html")
 
 if __name__ == '__main__':
     app.run(debug=True)

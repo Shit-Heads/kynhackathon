@@ -12,7 +12,7 @@ def get_redirect_url(url):
 def scrape_google_news(location, category):
     search_query = f"{location} {category}"
     with sync_playwright() as p:
-        browser = p.firefox.launch(headless=True)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         
         # Navigate to Google News with the search query
