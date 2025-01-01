@@ -272,8 +272,8 @@
         <div class="pricing-container">
             <div class="pricing-card">
                 <h2 class="plan-name">Basic</h2>
-                <div class="price">₹999</div>
-                <div class="period">per month</div>
+                <div class="price">Free</div>
+                <div class="period">Upto one month</div>
                 <div class="trusted-badge">Trusted User Access</div>
                 <ul class="features">
                     <li>Post up to 10 news articles/month</li>
@@ -282,12 +282,12 @@
                     <li>Community Discussion Access</li>
                     <li>Email Support</li>
                 </ul>
-                <button class="btn" onclick="openModal('Basic', '999')">Learn More</button>
+                <button class="btn" onclick="openModal('Basic', '0')">Learn More</button>
             </div>
 
             <div class="pricing-card featured">
                 <h2 class="plan-name">Professional</h2>
-                <div class="price">₹1,499</div>
+                <div class="price">₹499</div>
                 <div class="period">per month</div>
                 <div class="trusted-badge">Trusted User Access</div>
                 <ul class="features">
@@ -297,12 +297,12 @@
                     <li>Priority Community Features</li>
                     <li>24/7 Priority Support</li>
                 </ul>
-                <button class="btn" onclick="openModal('Professional', '2499')">Learn More</button>
+                <button class="btn" onclick="openModal('Professional', '499')">Learn More</button>
             </div>
 
             <div class="pricing-card">
                 <h2 class="plan-name">Enterprise</h2>
-                <div class="price">₹1,999</div>
+                <div class="price">₹999</div>
                 <div class="period">per month</div>
                 <div class="trusted-badge">Trusted User Access</div>
                 <ul class="features">
@@ -312,36 +312,29 @@
                     <li>Custom Branding Options</li>
                     <li>Dedicated Account Manager</li>
                 </ul>
-                <button class="btn" onclick="openModal('Enterprise', '4999')">Learn More</button>
+                <button class="btn" onclick="openModal('Enterprise', '999')">Learn More</button>
             </div>
+            
         </div>
     </div>
 
     <!-- Payment Modal -->
-    <div class="modal" id="paymentModal">
+    <div id="paymentModal" class="modal">
         <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <h2 style="margin-bottom: 20px">Complete Your Subscription</h2>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            <h2 id="selectedPlan"></h2>
             <div class="payment-summary">
                 <div class="summary-row">
-                    <span>Plan:</span>
-                    <span id="selectedPlan">Professional</span>
-                </div>
-                <div class="summary-row">
-                    <span>Duration:</span>
-                    <span>1 Month</span>
-                </div>
-                <div class="summary-row">
                     <span>Base Price:</span>
-                    <span id="basePrice">₹2,499</span>
+                    <span id="basePrice"></span>
                 </div>
                 <div class="summary-row">
-                    <span>GST (18%):</span>
-                    <span id="gstAmount">₹449.82</span>
+                    <span>GST (8%):</span>
+                    <span id="gstAmount"></span>
                 </div>
-                <div class="summary-row summary-total">
-                    <span>Total:</span>
-                    <span id="totalAmount">₹2,948.82</span>
+                <div class="summary-total">
+                    <span>Total Amount:</span>
+                    <span id="totalAmount"></span>
                 </div>
             </div>
             <form class="payment-form">
@@ -381,7 +374,7 @@
             basePrice.textContent = `₹${price}`;
             
             // Calculate GST and total
-            const gst = (price * 0.18).toFixed(2);
+            const gst = (price * 0.08).toFixed(2);
             const total = (parseFloat(price) + parseFloat(gst)).toFixed(2);
             
             gstAmount.textContent = `₹${gst}`;
